@@ -1,178 +1,176 @@
-// Tabs
-let tabcontent = document.querySelectorAll(".tabcontent"),
-  tabs = document.querySelectorAll(".tabheader__item"),
-  tabcontainer = document.querySelector(".tabheader__items");
+// zero function
 
-function hidetabs() {
-  tabcontent.forEach((item) => {
-    item.classList.add("hide");
-    item.classList.remove("show", "fade");
-  });
-  tabs.forEach((item) => {
-    item.classList.remove("tabheader__item_active");
-  });
+function zero(n) {
+    return n < 10 ? '0' + n : n
 }
 
-function showtabs(i) {
-  tabcontent[i].classList.add("show", "fade");
-  tabcontent[i].classList.remove("hide");
-  tabs[i].classList.add("tabheader__item_active");
-}
-hidetabs();
-showtabs(1);
 
-tabcontainer.addEventListener("click", (e) => {
-  let target = e.target;
+// Modal
 
-  if (target && target.classList.contains("tabheader__item")) {
-    tabs.forEach((item, index) => {
-      if (target === item) {
-        hidetabs();
-        showtabs(index);
-      }
-    });
-  }
-});
+const ModalBtn = document.querySelectorAll('[data-modal]')
+const modal = document.querySelector('.modal')
+const ModalClear = document.querySelector('[data-close]')
 
-// Timer
 
-const deadline = "2025-10-01";
+ModalBtn.forEach((item) => {
+    item.addEventListener('click', () => {
+        modal.classList.add('show', "fade")
+        modal.classList.remove('hide')
+        document.body.style.overflow = 'hidden'
+    })
+})
 
-function getTimeRemaning(endtime) {
-  const t = Date.parse(endtime) - Date.parse(new Date()),
-    days = Math.floor(t / (1000 * 60 * 60 * 24)),
-    hours = Math.floor((t / (1000 * 60 * 60)) % 24),
-    minutes = Math.floor((t / 1000 / 60) % 60),
-    seconds = Math.floor((t / 1000) % 60);
+ModalClear.addEventListener('click', () => {
+    modal.classList.remove('show')
+    modal.classList.add('hide')
+    document.body.style.overflow = 'auto'
+})
 
-  return {
-    total: t,
-    days,
-    hours,
-    minutes,
-    seconds,
-  };
-}
-
-// soni
-
-function getZero(num) {
-  if (num < 10) {
-    return `0${num}`;
-  } else {
-    return num;
-  }
-}
-
-function setClock(selector, endtime) {
-  const timer = document.querySelector(selector),
-    days = timer.querySelector("#days"),
-    hours = timer.querySelector("#hours"),
-    minutes = timer.querySelector("#minutes"),
-    seconds = timer.querySelector("#seconds"),
-    timeInterval = setInterval(updateClock, 1000);
-
-  updateClock();
-
-  function updateClock() {
-    const t = getTimeRemaning(endtime);
-
-    // soni
-    days.innerHTML = getZero(t.days);
-    hours.innerHTML = getZero(t.hours);
-    minutes.innerHTML = getZero(t.minutes);
-    seconds.innerHTML = getZero(t.seconds);
-
-    // days.innerHTML = t.days;
-    // hours.innerHTML = t.hours
-    // minutes.innerHTML = t.minutes;
-    // seconds.innerHTML = t.seconds;
-
-    if (t.total <= 0) {
-      clearInterval(timeInterval);
+modal.addEventListener('click', (e) => {
+    if (e.target == modal) {
+        modal.classList.remove('show')
+        modal.classList.add('hide')
+        document.body.style.overflow = 'auto'
     }
-  }
+})
+
+
+// Tabs
+
+const tabContent = document.querySelectorAll('.tabcontent')
+const tabHeader = document.querySelector('.tabheader')
+const tabHeaderItems = document.querySelectorAll('.tabheader__item')
+
+const hideTab = () => {
+    tabContent.forEach(item => {
+        item.classList.remove('show')
+        item.classList.add('hide')
+    })
+
+    tabHeaderItems.forEach(item => {
+        item.classList.remove('tabheader__item_active')
+    })
 }
 
-setClock(".timer", deadline);
+const showTab = (i = 0) => {
+    tabContent[i].classList.remove('hide')
+    tabContent[i].classList.add('show')
+    tabHeaderItems[i].classList.add('tabheader__item_active')
+}
+
+tabHeader.addEventListener('click', () => {
+    tabHeaderItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            hideTab()
+            showTab(index)
+        })
+    })
+})
+
+hideTab()
+showTab()
+
 
 // Slider
 
-// const slides = document.querySelectorAll(".offer__slide"),
-//   prev = document.querySelector(".offer__slider-prev"),
-//   next = document.querySelector(".offer__slider-next"),
-//   total = document.querySelector("#total"),
-//   current = document.querySelector("#current"),
-//   slidesWrapper = document.querySelector(".offer__slider-wrapper"),
-//   slider = document.querySelector(".offer__slider"),
-//   slidesField = document.querySelector(".offer__slider-inner"),
-//   width = window.getComputedStyle(slidesWrapper).width;
+const left = document.querySelector('.offer__slider-prev')
+const right = document.querySelector('.offer__slider-next')
+const sliderCounter = document.querySelector('#current')
+const sliderTotal = document.querySelector('#total')
+const slides = document.querySelectorAll('.offer__slide')
 
-// let slideIndex = 1;
-// let offset = 0;
 
-// if (slides.length < 10) {
-//   total.textContent = `0${slides.length}`;
-//   current.textContent = `0${slideIndex}`;
-// } else {
-//   total.textContent = slides.length;
-//   current.textContent = slideIndex;
-// }
+let sliderCount = 1
+sliderCounter.innerHTML = zero(sliderCount)
+sliderTotal.innerHTML = zero(slides.length)
 
-// slidesField.style.width = 100 * slides.length + "%";
-// slidesField.style.display = "flex";
-// slidesField.style.transition = "0.5s all linear";
-
-// slidesWrapper.style.overflow = "hidden";
-
-// slides.forEach((slide) => {
-//   slide.style.width = width;
-// });
-
-// Slider
-
-let slideIndex = 1;
-const slides = document.querySelectorAll(".offer__slide"),
-  prev = document.querySelector(".offer__slider-prev"),
-  next = document.querySelector(".offer__slider-next"),
-  total = document.querySelector("#total"),
-  current = document.querySelector("#current");
-
-showSlides(slideIndex);
-
-if (slides.length < 10) {
-  total.textContent = `0${slides.length}`;
-} else {
-  total.textContent = slides.length;
+const hideSlides = () => {
+    slides.forEach(item => {
+        item.classList.remove('show')
+        item.classList.add('hide')
+    })
 }
 
-function showSlides(n) {
-  if (n > slides.length) {
-    slideIndex = 1;
-  }
-  if (n < 1) {
-    slideIndex = slides.length;
-  }
-
-  slides.forEach((item) => (item.style.display = "none"));
-
-  slides[slideIndex - 1].style.display = "block"; // Как ваша самостоятельная работа - переписать на использование классов show/hide
-
-  if (slides.length < 10) {
-    current.textContent = `0${slideIndex}`;
-  } else {
-    current.textContent = slideIndex;
-  }
+const showSlides = (i = 0) => {
+    hideSlides()
+    slides[i].classList.remove('hide')
+    slides[i].classList.add('show', 'fade')
 }
 
-function plusSlides(n) {
-  showSlides((slideIndex += n));
+hideSlides()
+showSlides()
+
+left.addEventListener('click', () => {
+    if (sliderCount > 1) {
+        sliderCount = sliderCounter.innerHTML
+        sliderCount--
+        sliderCounter.innerHTML = zero(sliderCount)
+    } else {
+        sliderCount = 4
+        sliderCounter.innerHTML = zero(sliderCount)
+    }
+    showSlides(sliderCount - 1)
+})
+
+right.addEventListener('click', () => {
+    if (sliderCount < sliderTotal.innerHTML) {
+        sliderCount = sliderCounter.innerHTML
+        sliderCount++
+        sliderCounter.innerHTML = zero(sliderCount)
+    } else {
+        sliderCount = 1
+        sliderCounter.innerHTML = zero(sliderCount)
+    }
+
+    showSlides(sliderCount - 1)
+})
+
+
+// Timer 
+
+const days = document.querySelector('#days')
+const hours = document.querySelector('#hours')
+const minutes = document.querySelector('#minutes')
+const seconds = document.querySelector('#seconds')
+
+let s = seconds.innerHTML
+let m = minutes.innerHTML
+let h = hours.innerHTML
+let d = days.innerHTML
+let inter
+
+const Timer = () => {
+    inter = setInterval(() => {
+
+        if (s != 0) {
+            s--
+            seconds.innerHTML = zero(s)
+        } else if (s == 0 && m != 0) {
+            m--
+            s = 59
+            seconds.innerHTML = zero(s)
+            minutes.innerHTML = zero(m)
+        } else if (s == 0 && m == 0 && h != 0) {
+            h--
+            m = 59
+            s = 59
+            hours.innerHTML = zero(h)
+            seconds.innerHTML = zero(s)
+            minutes.innerHTML = zero(m)
+        } else if (s == 0 && m == 0 && h == 0 && d != 0) {
+            d--
+            h = 23
+            m = 59
+            s = 59
+            days.innerHTML = zero(d)
+            hours.innerHTML = zero(h)
+            seconds.innerHTML = zero(s)
+            minutes.innerHTML = zero(m)
+        } else {
+            clearInterval(inter)
+        }
+
+    }, 1000)
 }
 
-prev.addEventListener("click", function () {
-  plusSlides(-1);
-});
-
-next.addEventListener("click", function () {
-  plusSlides(1);
-});
+Timer()
