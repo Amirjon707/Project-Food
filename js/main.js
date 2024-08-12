@@ -128,49 +128,50 @@ right.addEventListener('click', () => {
 
 // Timer 
 
-const days = document.querySelector('#days')
-const hours = document.querySelector('#hours')
-const minutes = document.querySelector('#minutes')
-const seconds = document.querySelector('#seconds')
+let deadLine = '2024-09-01'
 
-let s = seconds.innerHTML
-let m = minutes.innerHTML
-let h = hours.innerHTML
-let d = days.innerHTML
-let inter
+function getDate(endTime) {
+    const t = Date.parse(endTime) - Date.parse(new Date());
 
-const Timer = () => {
-    inter = setInterval(() => {
+    const days = Math.floor(t / (1000 * 60 * 60 * 24))
+    const hours = Math.floor(t / (1000 * 60 * 60) % 24)
+    const minutes = Math.floor(t / (1000 * 60) % 60)
+    const seconds = Math.floor(t / 1000 % 60)
 
-        if (s != 0) {
-            s--
-            seconds.innerHTML = zero(s)
-        } else if (s == 0 && m != 0) {
-            m--
-            s = 59
-            seconds.innerHTML = zero(s)
-            minutes.innerHTML = zero(m)
-        } else if (s == 0 && m == 0 && h != 0) {
-            h--
-            m = 59
-            s = 59
-            hours.innerHTML = zero(h)
-            seconds.innerHTML = zero(s)
-            minutes.innerHTML = zero(m)
-        } else if (s == 0 && m == 0 && h == 0 && d != 0) {
-            d--
-            h = 23
-            m = 59
-            s = 59
-            days.innerHTML = zero(d)
-            hours.innerHTML = zero(h)
-            seconds.innerHTML = zero(s)
-            minutes.innerHTML = zero(m)
-        } else {
-            clearInterval(inter)
-        }
-
-    }, 1000)
+    return {
+        total: t,
+        days,
+        hours,
+        minutes,
+        seconds
+    }
 }
 
-Timer()
+getDate(deadLine)
+
+function setTime(selector, endTime) {
+    const timer = document.querySelector(selector);
+
+    const days = timer.querySelector('#days')
+    const hours = timer.querySelector('#hours')
+    const minutes = timer.querySelector('#minutes')
+    const seconds = timer.querySelector('#seconds')
+    Time()
+
+    let inter = setInterval(Time, 1000)
+
+    function Time() {
+        let t = getDate(deadLine)
+        if (t.total == 0) {
+            clearInterval(inter)
+        } else {
+            days.innerHTML = zero(t.days)
+            hours.innerHTML = zero(t.hours)
+            minutes.innerHTML = zero(t.minutes)
+            seconds.innerHTML = zero(t.seconds)
+        }
+
+    }
+}
+
+setTime('.timer', deadLine)
